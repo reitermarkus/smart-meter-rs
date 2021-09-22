@@ -27,7 +27,7 @@ impl ActionGenerator for Generator {
 
 #[actix_rt::main]
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
-  let url_or_path = env::var("SERIAL_PORT").unwrap_or("/dev/serial0");
+  let url_or_path = env::var("SERIAL_PORT").unwrap_or("/dev/serial0".into());
   let key = env::var("KEY").expect("No key provided");
   let key = <[u8; 16]>::from_hex(key).expect("Invalid key format");
   let port = env::var("PORT").map(|s| s.parse::<u16>().expect("Port is invalid")).unwrap_or(8888);
