@@ -12,7 +12,7 @@ homepage = "https://github.com/reitermarkus/smart-meter-rs"
 
 [dependencies]
 mbusparse = { version = "0.1.1" }
-dlms_cosem = { version = "0.1.0" }
+dlms_cosem = { version = "0.1.1", features = ["serde"] }
 nom = "7.0"
 serialport = { version = "4.0", optional = true }
 either = { version = "1.6", optional = true }
