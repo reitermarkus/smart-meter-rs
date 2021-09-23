@@ -2,6 +2,7 @@ use std::error::Error;
 use std::env;
 use std::net::TcpStream;
 use std::sync::{Arc, RwLock, Weak};
+use std::time::Duration;
 use std::thread;
 
 use either::Either;
@@ -35,11 +36,13 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
   let stream = if url_or_path.contains(":") {
     Either::Left(TcpStream::connect(url_or_path)?)
   } else {
-    Either::Right(serialport::new(url_or_path, 2400)
+    let mut serial_port = serialport::new(url_or_path, 2400)
       .parity(Parity::Even)
       .data_bits(DataBits::Eight)
       .stop_bits(StopBits::One)
-      .open()?)
+      .open()?;
+    serial_port.set_timeout(Duration::from_secs(10))?;
+    Either::Right(serial_port)
   };
 
   let dlms = Dlms::new(key);
