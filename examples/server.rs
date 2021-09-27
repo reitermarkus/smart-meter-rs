@@ -40,8 +40,9 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
       .parity(Parity::Even)
       .data_bits(DataBits::Eight)
       .stop_bits(StopBits::One)
-      .open()?;
-    serial_port.set_timeout(Duration::from_secs(10))?;
+      .timeout(Duration::from_secs(30))
+      .open_native()?;
+    serial_port.set_exclusive(true)?;
     Either::Right(serial_port)
   };
 
