@@ -10,7 +10,7 @@ use dlms_cosem::{ObisCode, Data, DateTime, Dlms, Unit};
 use smart_meter::SmartMeter;
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
-  let url_or_path = env::args().nth(1).unwrap_or("/dev/serial0");
+  let url_or_path = env::args().nth(1).unwrap_or("/dev/serial0".into());
   let key = env::args().nth(2).expect("No key provided");
   let key = <[u8; 16]>::from_hex(key).expect("Invalid key format");
 
