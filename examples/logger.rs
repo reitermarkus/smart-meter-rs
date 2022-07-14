@@ -6,7 +6,7 @@ use either::Either;
 use hex::FromHex;
 use serialport::{Parity, DataBits, StopBits};
 
-use dlms_cosem::{ObisCode, Data, DateTime, Dlms, Unit};
+use dlms_cosem::{ObisCode, Data, DateTime, Dlms, Unit, mbus::MBusDataLinkLayer};
 use smart_meter::SmartMeter;
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
   let dlms = Dlms::new(key);
 
-  let mut smart_meter = SmartMeter::new(stream, dlms);
+  let mut smart_meter = SmartMeter::<_, MBusDataLinkLayer>::obis_iter(stream, dlms);
 
   loop {
     let mut obis = smart_meter.next().unwrap()?;
