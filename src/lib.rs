@@ -117,7 +117,7 @@ where
       let mut telegrams_len = 0;
 
       for i in 0..telegrams_needed {
-        let err = match Dll::parse_frame(buffer).map_err(|err| err.into()) {
+        let err = match Dll::parse_frame(buffer).map_err(Into::into) {
           Ok((next_buffer, telegram)) => {
             let telegram_len = buffer.len() - next_buffer.len();
             if i == 0 {
@@ -132,7 +132,7 @@ where
         };
         match err {
           Some(ParseError::Incomplete(n)) => {
-            bytes_needed = n.map(|b| b.get()).unwrap_or(1);
+            bytes_needed = n.map(NonZeroUsize::get).unwrap_or(1);
             continue 'outer;
           }
           Some(ParseError::InvalidStart) => {
@@ -160,7 +160,7 @@ where
           return Some(Ok(apdu));
         }
         Err(DlmsError::Incomplete(n)) => {
-          telegrams_needed += n.map(|t| t.get()).unwrap_or(1);
+          telegrams_needed += n.map(NonZeroUsize::get).unwrap_or(1);
         }
         Err(DlmsError::InvalidFormat | DlmsError::ChecksumMismatch) => {
           // Other error, continue with next telegram.
